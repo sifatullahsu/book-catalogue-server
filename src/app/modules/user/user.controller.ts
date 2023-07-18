@@ -3,18 +3,7 @@ import httpStatus from 'http-status'
 import apiResponse from '../../../shared/api_response'
 import catchAsync from '../../../shared/catch_async'
 import { iUser } from './user.interface'
-import { getUserDB, updateUserDB, updateUserWishlistDB } from './user.service'
-
-// export const getUsers: RequestHandler = catchAsync(async (req: Request, res: Response) => {
-//   const result = await getUsersDB()
-
-//   apiResponse<iUser[]>(res, {
-//     success: true,
-//     statusCode: httpStatus.OK,
-//     message: 'Users retrieved successfully',
-//     data: result
-//   })
-// })
+import { getUserDB, updateUserDB, updateUserReadingDB, updateUserWishlistDB } from './user.service'
 
 export const getUser: RequestHandler = catchAsync(async (req: Request, res: Response) => {
   const result = await getUserDB(req.params.id)
@@ -49,13 +38,13 @@ export const updateUserWishlist: RequestHandler = catchAsync(async (req: Request
   })
 })
 
-// export const deleteUser: RequestHandler = catchAsync(async (req: Request, res: Response) => {
-//   const result = await deleteUserDB(req.params.id)
+export const updateUserReading: RequestHandler = catchAsync(async (req: Request, res: Response) => {
+  const result = await updateUserReadingDB(req.params.id, req.body)
 
-//   apiResponse<iUser>(res, {
-//     success: true,
-//     statusCode: httpStatus.OK,
-//     message: 'Uers deleted successfully',
-//     data: result
-//   })
-// })
+  apiResponse<iUser>(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User updated successfully',
+    data: result
+  })
+})

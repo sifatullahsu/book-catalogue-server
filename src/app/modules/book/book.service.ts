@@ -8,78 +8,7 @@ export const createBookDB = async (data: iBook): Promise<iBook> => {
   return result
 }
 
-/* export const getBooksDB = async (
-  filterObj: iBookModel,
-  paginationObj: Partial<iPaginationResult>
-): Promise<{
-  meta: {
-    page: number
-    limit: number
-    count: number
-  }
-  data: iBook[]
-}> => {
-  const { page, limit, skip, sortBy, sortOrder }: iPaginationResult = pagination(paginationObj)
-  const { searchTerm, ...filtersData } = filterObj
-
-  const sortConditions: { [key: string]: SortOrder } = {}
-
-  if (sortBy && sortOrder) {
-    sortConditions[sortBy] = sortOrder
-  }
-
-  const andConditions = []
-
-  if (searchTerm) {
-    andConditions.push({
-      $or: cowSearchFields.map(field => ({
-        [field]: {
-          $regex: searchTerm,
-          $options: 'i'
-        }
-      }))
-    })
-  }
-
-  if (Object.keys(filtersData).length) {
-    const myArray = Object.entries(filtersData)
-
-    andConditions.push({
-      $and: myArray.map(item => {
-        const [field, value] = item
-
-        if (field === 'location') {
-          return {
-            [field]: value
-          }
-        } else if (field === 'maxPrice') {
-          return {
-            price: { $lte: parseInt(value) }
-          }
-        } else {
-          return {
-            price: { $gte: parseInt(value) }
-          }
-        }
-      })
-    })
-  }
-
-  const whereConditions = andConditions.length > 0 ? { $and: andConditions } : {}
-
-  const result = await Book.find(whereConditions).sort(sortConditions).skip(skip).limit(limit)
-  const count = await Book.find(whereConditions).countDocuments()
-
-  return {
-    meta: {
-      page,
-      limit,
-      count
-    },
-    data: result
-  }
-} */
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getBooksDB = async (query: any): Promise<iBook[] | null> => {
   // const findQuery = { $and: [{ name: 'search' }, { genre: 'genre' }, { publicationDate: 'publicationDate' }] }
 
@@ -100,9 +29,9 @@ export const getBooksDB = async (query: any): Promise<iBook[] | null> => {
     initialQuery.push({ $expr: { $eq: [{ $year: '$publicationDate' }, query.publicationDate] } })
   }
 
-  query = initialQuery.length > 0 ? { $and: initialQuery } : {}
+  const TheQuery = initialQuery.length > 0 ? { $and: initialQuery } : {}
 
-  const result = await Book.find(query)
+  const result = await Book.find(TheQuery).limit(query.limit)
   if (!result) throw new ApiError(404, 'Not found.')
 
   return result

@@ -1,5 +1,5 @@
 import express from 'express'
-import { getUser, updateUser, updateUserWishlist } from './user.controller'
+import { getUser, updateUser, updateUserReading, updateUserWishlist } from './user.controller'
 
 const v1UserRoute = express.Router()
 
@@ -9,5 +9,6 @@ const v1UserRoute = express.Router()
 v1UserRoute.get('/:id', getUser)
 v1UserRoute.patch('/:id', updateUser)
 v1UserRoute.patch('/:id/wishlist', updateUserWishlist)
+v1UserRoute.patch('/:id/reading', updateUserReading)
 
 export default v1UserRoute
